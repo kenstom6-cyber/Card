@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thẻ Cá Nhân mDkeyy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-cyan: #00f3ff;
+            --neon-pink: #ff00ff;
+            --deep-black: #050505;
+            --glitch-speed: 3s;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--deep-black);
+            font-family: 'Space Grotesk', sans-serif;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #050505 0%, #0a0a15 100%);
+        }
+
+        #code-rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: rgba(0, 243, 255, 0.05);
+            line-height: 1;
+            pointer-events: none;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        #main-container {
+            position: relative;
+            width: 420px;
+            height: 720px;
+            z-index: 10;
+        }
+
+        #profile-card {
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 30px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 
+                        0 0 30px rgba(0, 243, 255, 0.1);
+            overflow: hidden;
+        }
+
+        #profile-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-cyan), transparent, var(--neon-pink), transparent);
+            z-index: -1;
+            border-radius: 24px;
+            opacity: 0.3;
+            animation: borderRotate 6s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+
+        #avatar-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+        }
+
+        #avatar-image {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+        }
+
+        #glitch-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: inherit;
+            box-shadow: inset 0 0 0 3px var(--neon-pink);
+            opacity: 0.6;
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip-path: inset(40% 0 61% 0); transform: translate(-5px); }
+            20% { clip-path: inset(92% 0 1% 0); transform: translate(5px); }
+            40% { clip-path: inset(43% 0 1% 0); transform: translate(-5px); }
+            60% { clip-path: inset(25% 0 58% 0); transform: translate(5px); }
+            80% { clip-path: inset(54% 0 7% 0); transform: translate(-5px); }
+            100% { clip-path: inset(58% 0 43% 0); transform: translate(5px); }
+        }
+
+        #user-name {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        #user-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--neon-cyan);
+            margin-bottom: 25px;
+            background: rgba(0, 243, 255, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 243, 255, 0.3);
+        }
+
+        #product-box {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 16px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        #product-title {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        #product-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        #price-value {
+            color: var(--neon-pink);
+            text-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        }
+
+        #price-unit {
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        #action-buttons {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .social-card {
+            width: 100%;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .social-card:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        #zalo-card {
+            background: linear-gradient(90deg, #0068ff 0%, #00c6ff 100%);
+        }
+
+        #zalo-card::after {
+            content: 'CLICK TO CONNECT';
+            position: absolute;
+            right: -100%;
+            font-size: 10px;
+            font-weight: 700;
+            transition: right 0.3s;
+        }
+
+        #zalo-card:hover::after {
+            right: 20px;
+        }
+
+        #telegram-card {
+            background: linear-gradient(90deg, #229ED9 0%, #2aabee 100%);
+        }
+
+        #telegram-card::after {
+            content: 'JOIN CHANNEL';
+            position: absolute;
+            right: -100%;
+            font-size: 10px;
+            font-weight: 700;
+            transition: right 0.3s;
+        }
+
+        #telegram-card:hover::after {
+            right: 20px;
+        }
+
+        .social-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 15px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .social-text {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        #footer-status {
+            margin-top: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            color: #444;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #status-dot {
+            width: 6px;
+            height: 6px;
+            background: #00ff41;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #00ff41;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        #scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: rgba(0, 243, 255, 0.5);
+            box-shadow: 0 0 15px var(--neon-cyan);
+            animation: scan 4s linear infinite;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        .decorative-text {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 8px;
+            color: rgba(255, 255, 255, 0.1);
+            user-select: none;
+        }
+
+        #top-right-dec { top: 20px; right: 20px; text-align: right; }
+        #bottom-left-dec { bottom: 20px; left: 20px; }
+
+    </style>
+</head>
+<body>
+
+    <div id="bg-canvas">
+        <div id="code-rain">
+            01010100 01010010 01010101 01001101 01001000 01000001 01000011 01001011<br>
+            SYSTEM_OVERRIDE_INITIATED...<br>
+            ACCESS_GRANTED_BY_ADMIN<br>
+            ENCRYPTING_DATABASE_v4.0<br>
+            BYPASSING_FIREWALL_SUCCESSFUL<br>
+            01010100 01010010 01010101 01001101 01001000 01000001 01000011 01001011<br>
+            SYSTEM_OVERRIDE_INITIATED...<br>
+            ACCESS_GRANTED_BY_ADMIN<br>
+            ENCRYPTING_DATABASE_v4.0<br>
+            BYPASSING_FIREWALL_SUCCESSFUL<br>
+            01010100 01010010 01010101 01001101 01001000 01000001 01000011 01001011<br>
+            SYSTEM_OVERRIDE_INITIATED...<br>
+            ACCESS_GRANTED_BY_ADMIN<br>
+            ENCRYPTING_DATABASE_v4.0<br>
+            BYPASSING_FIREWALL_SUCCESSFUL<br>
+        </div>
+    </div>
+
+    <div id="main-container">
+        <div id="scan-line"></div>
+        <div id="profile-card">
+            
+            <div id="top-right-dec" class="decorative-text">
+                SECURE_CONNECTION: ESTABLISHED<br>
+                ENCRYPTION: AES-256
+            </div>
+
+            <div id="avatar-wrapper">
+                <img id="avatar-image" src="https://postimg.cc/1g8BT9cR" alt="Profile">
+                <div id="glitch-effect"></div>
+            </div>
+
+            <h1 id="user-name">Liên Hệ Để Được Hỗ Trợ</h1>
+            <div id="user-tag">UY TÍN - BẢO MẬT - AN TOÀN</div>
+
+            <div id="product-box">
+                <div id="product-title">Premium Access Key</div>
+                <div id="product-price">
+                    <span id="price-value">600.000₫</span>
+                    <span id="price-unit">/THÁNG</span>
+                </div>
+                <div style="font-size: 10px; margin-top: 10px; color: #00ff41;">
+                    GIÁ ĐÃ BAO GỒM HƯỚNG DẪN CÀI ĐẶT TRỰC TIẾP
+                </div>
+            </div>
+
+            <div id="action-buttons">
+                <a href="https://id.zalo.me/account/login?continue=http%3A%2F%2Fzalo.me%2F0853666599" id="zalo-card" class="social-card" target="_blank">
+                    <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png" alt="Zalo">
+                    <span class="social-text">LIÊN HỆ QUA ZALO</span>
+                </a>
+
+                <a href="https://t.me/mdkeyy" id="telegram-card" class="social-card" target="_blank">
+                    <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" alt="Telegram">
+                    <span class="social-text">HỖ TRỢ TELEGRAM</span>
+                </a>
+            </div>
+
+            <div id="bottom-left-dec" class="decorative-text">
+                VERIFIED_VENDOR<br>
+                BUILD_ID: 0x9928AF
+            </div>
+
+            <div id="footer-status">
+                <div id="status-dot"></div>
+                SERVER STATUS: ONLINE
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple code rain effect generator
+        const codeRain = document.getElementById('code-rain');
+        const chars = '01ABCDEF$%&*#@';
+        let content = '';
+        for(let i=0; i<100; i++) {
+            let line = '';
+            for(let j=0; j<50; j++) {
+                line += chars.charAt(Math.floor(Math.random() * chars.length)) + ' ';
+            }
+            content += line + '<br>';
+        }
+        codeRain.innerHTML = content;
+
+        // Interactive mouse movement for depth
+        document.addEventListener('mousemove', (e) => {
+            const card = document.getElementById('profile-card');
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+    </script>
+</body>
+</html>
