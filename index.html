@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thẻ Cá Nhân mDkeyy</title>
+    <title>Elite Hacker Profile | PUBG Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=JetBrains+Mono:wght@300;500&display=swap" rel="stylesheet">
+    <style id="premium-cyber-styles">
         :root {
             --neon-cyan: #00f3ff;
             --neon-pink: #ff00ff;
             --deep-black: #050505;
+            --glass-bg: rgba(10, 10, 10, 0.85);
             --glitch-speed: 3s;
         }
 
@@ -21,402 +22,388 @@
             height: 100%;
             overflow: hidden;
             background-color: var(--deep-black);
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: 'JetBrains Mono', monospace;
             color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        #bg-canvas {
+        #cyber-canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background: linear-gradient(45deg, #050505 0%, #0a0a15 100%);
+            background: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
         }
 
-        #code-rain {
+        #scanlines {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: rgba(0, 243, 255, 0.05);
-            line-height: 1;
+            background: linear-gradient(
+                to bottom,
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 1;
             pointer-events: none;
-            overflow: hidden;
-            white-space: nowrap;
+            opacity: 0.3;
         }
 
-        #main-container {
-            position: relative;
-            width: 420px;
-            height: 720px;
-            z-index: 10;
+        #main-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            perspective: 1000px;
         }
 
         #profile-card {
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 10, 0.6);
-            backdrop-filter: blur(25px) saturate(180%);
-            -webkit-backdrop-filter: blur(25px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+            position: relative;
+            width: 420px;
+            height: 720px;
+            background: var(--glass-bg);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            backdrop-filter: blur(15px);
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
             align-items: center;
             padding: 40px 30px;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 
-                        0 0 30px rgba(0, 243, 255, 0.1);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 243, 255, 0.1);
             overflow: hidden;
+            animation: card-float 6s ease-in-out infinite;
         }
 
         #profile-card::before {
-            content: '';
+            content: "";
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--neon-cyan), transparent, var(--neon-pink), transparent);
-            z-index: -1;
-            border-radius: 24px;
-            opacity: 0.3;
-            animation: borderRotate 6s linear infinite;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.1), transparent);
+            transition: 0.5s;
+            animation: card-sweep 4s linear infinite;
         }
 
-        @keyframes borderRotate {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+        #glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.05;
+            pointer-events: none;
         }
 
-        #avatar-wrapper {
+        #avatar-container {
             position: relative;
             width: 120px;
             height: 120px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         #avatar-image {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
+            border-radius: 2px;
             object-fit: cover;
-            border: 3px solid var(--neon-cyan);
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+            border: 2px solid var(--neon-cyan);
+            filter: grayscale(0.5) contrast(1.2);
+            box-shadow: 0 0 15px var(--neon-cyan);
         }
 
-        #glitch-effect {
+        #avatar-glitch-1, #avatar-glitch-2 {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            background: inherit;
-            box-shadow: inset 0 0 0 3px var(--neon-pink);
-            opacity: 0.6;
-            animation: glitch-anim 2s infinite linear alternate-reverse;
+            border: 2px solid var(--neon-pink);
+            opacity: 0;
         }
 
-        @keyframes glitch-anim {
-            0% { clip-path: inset(40% 0 61% 0); transform: translate(-5px); }
-            20% { clip-path: inset(92% 0 1% 0); transform: translate(5px); }
-            40% { clip-path: inset(43% 0 1% 0); transform: translate(-5px); }
-            60% { clip-path: inset(25% 0 58% 0); transform: translate(5px); }
-            80% { clip-path: inset(54% 0 7% 0); transform: translate(-5px); }
-            100% { clip-path: inset(58% 0 43% 0); transform: translate(5px); }
+        #avatar-container:hover #avatar-glitch-1 {
+            animation: glitch-anim 0.3s infinite;
+            opacity: 0.5;
         }
 
-        #user-name {
+        #name-heading {
+            font-family: 'Orbitron', sans-serif;
             font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 2px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: #fff;
             text-transform: uppercase;
+            text-shadow: 2px 2px var(--neon-pink);
             margin-bottom: 5px;
-            text-shadow: 0 0 10px var(--neon-cyan);
-        }
-
-        #user-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--neon-cyan);
-            margin-bottom: 25px;
-            background: rgba(0, 243, 255, 0.1);
-            padding: 4px 12px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 243, 255, 0.3);
-        }
-
-        #product-box {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px dashed rgba(255, 255, 255, 0.2);
-            padding: 20px;
-            border-radius: 16px;
-            text-align: center;
-            margin-bottom: 30px;
             position: relative;
         }
 
-        #product-title {
-            font-size: 14px;
-            color: #aaa;
-            margin-bottom: 10px;
+        #role-subtext {
+            font-size: 11px;
+            color: var(--neon-cyan);
             text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 30px;
+            opacity: 0.8;
         }
 
-        #product-price {
-            font-size: 32px;
-            font-weight: 700;
+        #divider-line {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            margin-bottom: 30px;
+        }
+
+        #service-info {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        #service-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
             color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
+            margin-bottom: 10px;
+            display: block;
         }
 
-        #price-value {
-            color: var(--neon-pink);
-            text-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+        #service-desc {
+            font-size: 13px;
+            color: #aaa;
+            line-height: 1.6;
         }
 
-        #price-unit {
-            font-size: 14px;
-            opacity: 0.6;
-        }
-
-        #action-buttons {
+        #contact-grid {
             width: 100%;
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        .social-card {
-            width: 100%;
-            height: 60px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        .contact-card {
             position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .social-card:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        #zalo-card {
-            background: linear-gradient(90deg, #0068ff 0%, #00c6ff 100%);
-        }
-
-        #zalo-card::after {
-            content: 'CLICK TO CONNECT';
-            position: absolute;
-            right: -100%;
-            font-size: 10px;
-            font-weight: 700;
-            transition: right 0.3s;
-        }
-
-        #zalo-card:hover::after {
-            right: 20px;
-        }
-
-        #telegram-card {
-            background: linear-gradient(90deg, #229ED9 0%, #2aabee 100%);
-        }
-
-        #telegram-card::after {
-            content: 'JOIN CHANNEL';
-            position: absolute;
-            right: -100%;
-            font-size: 10px;
-            font-weight: 700;
-            transition: right 0.3s;
-        }
-
-        #telegram-card:hover::after {
-            right: 20px;
-        }
-
-        .social-icon {
-            width: 32px;
-            height: 32px;
-            margin-right: 15px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-
-        .social-text {
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        #footer-status {
-            margin-top: auto;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: #444;
-            text-transform: uppercase;
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid var(--neon-cyan);
             display: flex;
             align-items: center;
-            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .contact-card:hover {
+            background: rgba(0, 243, 255, 0.1);
+            transform: translateX(5px);
+            border-left: 3px solid var(--neon-pink);
+        }
+
+        .contact-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            color: var(--neon-cyan);
+        }
+
+        .contact-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: #777;
+            display: block;
+        }
+
+        .contact-value {
+            font-size: 14px;
+            color: #fff;
+            font-weight: 500;
+        }
+
+        #status-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40px;
+            background: rgba(0, 243, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            font-size: 9px;
+            color: var(--neon-cyan);
+            border-top: 1px solid rgba(0, 243, 255, 0.1);
         }
 
         #status-dot {
             width: 6px;
             height: 6px;
-            background: #00ff41;
+            background: #00ff00;
             border-radius: 50%;
-            box-shadow: 0 0 10px #00ff41;
+            box-shadow: 0 0 10px #00ff00;
+            margin-right: 8px;
+            display: inline-block;
             animation: pulse 1.5s infinite;
         }
 
+        #corner-tl, #corner-tr, #corner-bl, #corner-br {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 2px solid var(--neon-cyan);
+        }
+
+        #corner-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+        #corner-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+        #corner-bl { bottom: 50px; left: 10px; border-right: 0; border-top: 0; }
+        #corner-br { bottom: 50px; right: 10px; border-left: 0; border-top: 0; }
+
+        @keyframes card-float {
+            0%, 100% { transform: translateY(0) rotateX(2deg); }
+            50% { transform: translateY(-15px) rotateX(-2deg); }
+        }
+
+        @keyframes card-sweep {
+            0% { left: -100%; }
+            50% { left: 100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes glitch-anim {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(-3px, -3px); }
+            60% { transform: translate(3px, 3px); }
+            80% { transform: translate(3px, -3px); }
+            100% { transform: translate(0); }
+        }
+
         @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.3; }
-            100% { opacity: 1; }
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
         }
 
-        #scan-line {
+        #watermark {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: rgba(0, 243, 255, 0.5);
-            box-shadow: 0 0 15px var(--neon-cyan);
-            animation: scan 4s linear infinite;
-            z-index: 20;
+            right: -40px;
+            top: 200px;
+            transform: rotate(90deg);
+            font-size: 50px;
+            font-weight: 900;
+            color: rgba(255, 255, 255, 0.02);
             pointer-events: none;
+            text-transform: uppercase;
         }
-
-        @keyframes scan {
-            0% { top: 0%; }
-            100% { top: 100%; }
-        }
-
-        .decorative-text {
-            position: absolute;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 8px;
-            color: rgba(255, 255, 255, 0.1);
-            user-select: none;
-        }
-
-        #top-right-dec { top: 20px; right: 20px; text-align: right; }
-        #bottom-left-dec { bottom: 20px; left: 20px; }
-
     </style>
 </head>
 <body>
+    <div id="cyber-canvas"></div>
+    <div id="scanlines"></div>
 
-    <div id="bg-canvas">
-        <div id="code-rain">
-            01010100 01010010 01010101 01001101 01001000 01000001 01000011 01001011<br>
-            SYSTEM_OVERRIDE_INITIATED...<br>
-            ACCESS_GRANTED_BY_ADMIN<br>
-            ENCRYPTING_DATABASE_v4.0<br>
-            BYPASSING_FIREWALL_SUCCESSFUL<br>
-            01010100 01010010 01010101 01001101 01001000 01000001 01000011 01001011<br>
-            SYSTEM_OVERRIDE_INITIATED...<br>
-            ACCESS_GRANTED_BY_ADMIN<br>
-            ENCRYPTING_DATABASE_v4.0<br>
-            BYPASSING_FIREWALL_SUCCESSFUL<br>
-            01010100 01010010 01010101 01001101 01001000 01000001 01000011 01001011<br>
-            SYSTEM_OVERRIDE_INITIATED...<br>
-            ACCESS_GRANTED_BY_ADMIN<br>
-            ENCRYPTING_DATABASE_v4.0<br>
-            BYPASSING_FIREWALL_SUCCESSFUL<br>
-        </div>
-    </div>
-
-    <div id="main-container">
-        <div id="scan-line"></div>
+    <main id="main-wrapper">
         <div id="profile-card">
-            
-            <div id="top-right-dec" class="decorative-text">
-                SECURE_CONNECTION: ESTABLISHED<br>
-                ENCRYPTION: AES-256
+            <div id="glitch-overlay"></div>
+            <div id="corner-tl"></div>
+            <div id="corner-tr"></div>
+            <div id="corner-bl"></div>
+            <div id="corner-br"></div>
+            <div id="watermark">PUBG MOBILE</div>
+
+            <div id="avatar-container">
+                <img id="avatar-image" src="https://api.dicebear.com/7.x/bottts-neutral/svg?seed=Ghost&backgroundColor=050505" alt="Hacker Avatar">
+                <div id="avatar-glitch-1"></div>
             </div>
 
-            <div id="avatar-wrapper">
-                <img id="avatar-image" src="https://postimg.cc/1g8BT9cR" alt="Profile">
-                <div id="glitch-effect"></div>
+            <h1 id="name-heading">mDkey Cheat</h1>
+            <p id="role-subtext">Giải Pháp Hack PUBG Android</p>
+
+            <div id="divider-line"></div>
+
+            <div id="service-info">
+                <span id="service-title">PUBG MOBILE HACK HỆ ĐIỀU HÀNH ANDROID CẤP KERNEL</span>
+                <p id="service-desc">Cung cấp giải pháp can thiệp kỹ thuật cao cấp, chống ban với hệ thống hack cấp kernel không can thiệp vào game gốc, bảo mật tuyệt đối cho mọi tài khoản.</p>
             </div>
 
-            <h1 id="user-name">Liên Hệ Để Được Hỗ Trợ</h1>
-            <div id="user-tag">UY TÍN - BẢO MẬT - AN TOÀN</div>
-
-            <div id="product-box">
-                <div id="product-title">Premium Access Key</div>
-                <div id="product-price">
-                    <span id="price-value">600.000₫</span>
-                    <span id="price-unit">/THÁNG</span>
-                </div>
-                <div style="font-size: 10px; margin-top: 10px; color: #00ff41;">
-                    GIÁ ĐÃ BAO GỒM HƯỚNG DẪN CÀI ĐẶT TRỰC TIẾP
-                </div>
-            </div>
-
-            <div id="action-buttons">
-                <a href="https://id.zalo.me/account/login?continue=http%3A%2F%2Fzalo.me%2F0853666599" id="zalo-card" class="social-card" target="_blank">
-                    <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Icon_of_Zalo.svg/1200px-Icon_of_Zalo.svg.png" alt="Zalo">
-                    <span class="social-text">LIÊN HỆ QUA ZALO</span>
+            <div id="contact-grid">
+                <a href="https://t.me/mdkeyy" id="tg-card" class="contact-card" target="_blank" onclick="window.open('https://t.me/mdkeyy', '_blank'); return false;">
+                    <div class="contact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.91-1.27 4.85-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                    </div>
+                    <div>
+                        <span class="contact-label">Kênh hỗ trợ</span>
+                        <span class="contact-value">t.me/mdkeyy</span>
+                    </div>
                 </a>
 
-                <a href="https://t.me/mdkeyy" id="telegram-card" class="social-card" target="_blank">
-                    <img class="social-icon" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" alt="Telegram">
-                    <span class="social-text">HỖ TRỢ TELEGRAM</span>
+                <a href="http://zalo.me/0853666599" id="zalo-card" class="contact-card" target="_blank" onclick="window.open('http://zalo.me/0853666599', '_blank'); return false;">
+                    <div class="contact-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.17 12.3c-.23.36-.88.63-1.21.64-.32.01-.62-.12-1.56-.51-1.53-.63-2.52-2.19-2.59-2.29-.07-.1-1.08-1.44-1.08-2.75 0-1.31.68-1.95.93-2.21.25-.26.54-.33.72-.33.18 0 .36.01.52.02.16.01.38-.06.59.45.21.51.72 1.76.78 1.89.06.13.1.28.01.45-.09.18-.14.28-.27.44-.13.16-.28.35-.4.47-.13.13-.27.28-.11.55.16.27.7 1.15 1.5 1.87.8.72 1.48.94 1.75 1.07.27.13.43.11.59-.07.16-.18.69-.8 1.15-1.08.18-.11.36-.09.52-.03.16.06 1.05.49 1.23.58.18.09.3.13.34.21.05.08.05.47-.18.83z"/></svg>
+                    </div>
+                    <div>
+                        <span class="contact-label">Liên hệ trực tiếp</span>
+                        <span class="contact-value">ZALO 0853.666.599</span>
+                    </div>
                 </a>
             </div>
 
-            <div id="bottom-left-dec" class="decorative-text">
-                VERIFIED_VENDOR<br>
-                BUILD_ID: 0x9928AF
-            </div>
-
-            <div id="footer-status">
-                <div id="status-dot"></div>
-                SERVER STATUS: ONLINE
+            <div id="status-bar">
+                <div id="status-container">
+                    <span id="status-dot"></span>
+                    <span id="status-text">HỆ THỐNG ONLINE</span>
+                </div>
+                <div id="version-text">V2.4.9-STABLE</div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <script>
-        // Simple code rain effect generator
-        const codeRain = document.getElementById('code-rain');
-        const chars = '01ABCDEF$%&*#@';
-        let content = '';
-        for(let i=0; i<100; i++) {
-            let line = '';
-            for(let j=0; j<50; j++) {
-                line += chars.charAt(Math.floor(Math.random() * chars.length)) + ' ';
-            }
-            content += line + '<br>';
-        }
-        codeRain.innerHTML = content;
+    <script id="interactive-script">
+        const card = document.getElementById('profile-card');
+        const wrapper = document.getElementById('main-wrapper');
 
-        // Interactive mouse movement for depth
-        document.addEventListener('mousemove', (e) => {
-            const card = document.getElementById('profile-card');
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+        wrapper.addEventListener('mousemove', (e) => {
+            let xAxis = (window.innerWidth / 2 - e.pageX) / 25;
+            let yAxis = (window.innerHeight / 2 - e.pageY) / 25;
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        wrapper.addEventListener('mouseenter', () => {
+            card.style.transition = 'none';
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+        });
+
+        // Đảm bảo các link hoạt động
+        document.getElementById('tg-card').addEventListener('click', function(e) {
+            window.open('https://t.me/mdkeyy', '_blank');
+        });
+
+        document.getElementById('zalo-card').addEventListener('click', function(e) {
+            window.open('http://zalo.me/0853666599', '_blank');
         });
     </script>
 </body>
 </html>
+<script>
+document.body.contentEditable = 'true'; 
+document.body.style.cursor = 'text'; 
+document.body.style.minHeight = '100vh';
+document.querySelectorAll('img').forEach(img => {
+  const getRandomImg = () => 'https://picsum.photos/' + (img.width || 400) + '/' + (img.height || 300) + '?random=' + Math.random();
+  img.onerror = () => { img.src = getRandomImg(); };
+  const tempImg = new Image();
+  tempImg.onerror = () => { img.src = getRandomImg(); };
+  tempImg.onload = () => { img.src = tempImg.src; };
+  tempImg.src = img.src;
+});
+</script>
